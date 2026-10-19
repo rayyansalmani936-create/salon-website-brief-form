@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f3ef">
+    <title>Salon Website Brief</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #2e2521;
+        --muted: #746a65;
+        --line: #e8dfd8;
+        --paper: #fffdfb;
+        --canvas: #f7f3ef;
+        --accent: #8c5d50;
+        --accent-dark: #70463c;
+        --accent-soft: #f4e9e3;
+        --success: #276b4c;
+        --danger: #a63f37;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        background:
+          radial-gradient(ellipse at 12% 5%, #f1e4dc 0, transparent 32rem),
+          var(--canvas);
+        color: var(--ink);
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      button, input, select, textarea { font: inherit; }
+      .page { width: min(100% - 32px, 760px); margin: 0 auto; padding: 46px 0 64px; }
+      .intro { padding: 0 8px 24px; }
+      .eyebrow { margin: 0 0 9px; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+      h1, h2, p { margin-top: 0; }
+      h1 { max-width: 620px; margin-bottom: 10px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(34px, 7vw, 52px); font-weight: 500; letter-spacing: -.035em; line-height: 1.05; }
+      .intro-copy { max-width: 610px; margin-bottom: 0; color: var(--muted); font-size: 17px; }
+
+      .card { overflow: hidden; border: 1px solid #eee6e0; border-radius: 22px; background: var(--paper); box-shadow: 0 22px 65px #4b342412; }
+      .progress-wrap { padding: 22px 28px 18px; border-bottom: 1px solid var(--line); background: #fffaf7; }
+      .progress-meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 11px; color: var(--muted); font-size: 13px; font-weight: 700; }
+      .progress-track { height: 6px; overflow: hidden; border-radius: 99px; background: #eadfd8; }
+      .progress-bar { width: 25%; height: 100%; border-radius: inherit; background: var(--accent); transition: width .22s ease; }
+      .step-dots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
+      .step-dot { display: flex; align-items: center; gap: 7px; color: #8b817c; font-size: 12px; font-weight: 650; }
+      .step-dot span { display: grid; width: 23px; height: 23px; flex: 0 0 23px; place-items: center; border: 1px solid #d9cec7; border-radius: 50%; background: #fff; font-size: 11px; }
+      .step-dot.current { color: var(--accent-dark); }
+      .step-dot.current span, .step-dot.done span { border-color: var(--accent); background: var(--accent); color: #fff; }
+
+      form { padding: 28px; }
+      .step[hidden] { display: none; }
+      .step-heading { margin-bottom: 22px; }
+      .step-heading h2 { margin-bottom: 5px; font-family: Georgia, "Times New Roman", serif; font-size: 28px; font-weight: 500; line-height: 1.18; }
+      .step-heading p { margin-bottom: 0; color: var(--muted); font-size: 14px; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
+      .field { min-width: 0; }
+      .field.full { grid-column: 1 / -1; }
+      label, .field-label { display: block; margin-bottom: 7px; font-size: 14px; font-weight: 700; }
+      .optional { color: var(--muted); font-size: 12px; font-weight: 500; }
+      input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea {
+        width: 100%; min-height: 48px; padding: 11px 13px; border: 1px solid #dcd2cb; border-radius: 11px; outline: none; background: #fff; color: var(--ink); transition: border-color .15s ease, box-shadow .15s ease;
+      }
+      textarea { min-height: 100px; resize: vertical; }
+      input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #8c5d501c; }
+      input::placeholder, textarea::placeholder { color: #a49a94; }
+      .hint { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+
+      .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+      .option { position: relative; display: flex; min-height: 48px; align-items: center; gap: 10px; margin: 0; padding: 11px 12px; border: 1px solid var(--line); border-radius: 11px; background: #fff; cursor: pointer; font-size: 14px; font-weight: 550; line-height: 1.35; transition: border-color .15s ease, background .15s ease; }
+      .option:hover { border-color: #c8a99c; background: #fffaf7; }
+      .option input { width: 17px; height: 17px; flex: 0 0 17px; margin: 0; accent-color: var(--accent); }
+      .choice-group { margin: 0; padding: 0; border: 0; }
+      .choice-group legend { margin-bottom: 8px; padding: 0; font-size: 14px; font-weight: 700; }
+      .privacy { display: flex; align-items: flex-start; gap: 10px; margin-top: 20px; color: var(--muted); font-size: 13px; }
+      .privacy input { width: 18px; height: 18px; flex: 0 0 18px; margin: 2px 0 0; accent-color: var(--accent); }
+
+      .form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }
+      .form-footer-note { margin: 0; color: var(--muted); font-size: 12px; }
+      .actions { display: flex; gap: 10px; margin-left: auto; }
+      .button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 8px; padding: 11px 18px; border: 1px solid transparent; border-radius: 11px; cursor: pointer; font-size: 14px; font-weight: 750; transition: transform .12s ease, background .15s ease; }
+      .button:active { transform: translateY(1px); }
+      .button:focus-visible { outline: 3px solid #8c5d5050; outline-offset: 2px; }
+      .button.primary { background: var(--accent); color: #fff; }
+      .button.primary:hover { background: var(--accent-dark); }
+      .button.secondary { border-color: var(--line); background: #fff; color: var(--ink); }
+      .button.secondary:hover { background: #faf6f3; }
+      .button:disabled { cursor: wait; opacity: .7; }
+      .status { min-height: 24px; margin: 14px 0 0; text-align: center; font-size: 14px; font-weight: 650; }
+      .status.error { color: var(--danger); }
+      .status.success { color: var(--success); }
+      .footer-note { margin: 16px 0 0; color: var(--muted); text-align: center; font-size: 12px; }
+      .trap { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
+
+      @media (max-width: 600px) {
+        .page { width: min(100% - 20px, 760px); padding: 25px 0 36px; }
+        .intro { padding: 0 6px 18px; }
+        .intro-copy { font-size: 15px; }
+        .card { border-radius: 17px; }
+        .progress-wrap { padding: 17px 16px 15px; }
+        .step-dot { gap: 5px; font-size: 10px; }
+        .step-dot span { width: 21px; height: 21px; flex-basis: 21px; }
+        form { padding: 20px 16px; }
+        .step-heading h2 { font-size: 25px; }
+        .grid { grid-template-columns: 1fr; gap: 15px; }
+        .field.full { grid-column: auto; }
+        .options { grid-template-columns: 1fr; gap: 8px; }
+        .option { min-height: 46px; }
+        .form-footer { align-items: stretch; flex-direction: column; margin-top: 22px; }
+        .form-footer-note { order: 2; text-align: center; }
+        .actions { width: 100%; margin: 0; }
+        .actions .button { flex: 1; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="intro">
+        <p class="eyebrow">Salon website project</p>
+        <h1>Tell us about your salon.</h1>
+        <p class="intro-copy">A few details will help us plan a website that fits your salon, your services, and the way your customers like to book.</p>
+      </header>
+
+      <div class="card">
+        <div class="progress-wrap" aria-label="Form progress">
+          <div class="progress-meta"><span id="progressText">Step 1 of 4</span><span>About 3 minutes</span></div>
+          <div class="progress-track" aria-hidden="true"><div id="progressBar" class="progress-bar"></div></div>
+          <div class="step-dots" aria-hidden="true">
+            <div class="step-dot current" data-dot="0"><span>1</span>Salon</div>
+            <div class="step-dot" data-dot="1"><span>2</span>Website</div>
+            <div class="step-dot" data-dot="2"><span>3</span>Style</div>
+            <div class="step-dot" data-dot="3"><span>4</span>Launch</div>
+          </div>
+        </div>
+
+        <form id="salonForm" novalidate>
+          <div class="trap" aria-hidden="true"><label for="website">Leave this blank</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+
+          <section class="step" data-step="0" aria-labelledby="step1-title">
+            <div class="step-heading"><h2 id="step1-title" tabindex="-1">The salon basics</h2><p>How can we reach you, and what does your salon offer?</p></div>
+            <div class="grid">
+              <div class="field"><label for="salonName">Salon name <span aria-hidden="true">*</span></label><input id="salonName" name="Salon name" type="text" autocomplete="organization" maxlength="150" required placeholder="e.g. Rose & Ivy Salon"></div>
+              <div class="field"><label for="contactName">Your name <span class="optional">Optional</span></label><input id="contactName" name="Contact name" type="text" autocomplete="name" maxlength="150" placeholder="Your name"></div>
+              <div class="field"><label for="phone">Phone or WhatsApp number <span aria-hidden="true">*</span></label><input id="phone" name="Phone number" type="tel" autocomplete="tel" maxlength="50" required placeholder="+91 98765 43210"></div>
+              <div class="field"><label for="email">Email address <span class="optional">Optional</span></label><input id="email" name="Business email" type="email" autocomplete="email" maxlength="200" placeholder="you@example.com"></div>
+              <div class="field full"><label for="location">Salon city and area <span aria-hidden="true">*</span></label><input id="location" name="Salon location" type="text" maxlength="250" required placeholder="City, neighbourhood"></div>
+              <div class="field full"><label for="services">What services do you offer? <span class="optional">Optional</span></label><textarea id="services" name="Salon services" maxlength="2500" placeholder="Haircuts, colouring, facials, bridal makeup…"></textarea></div>
+            </div>
+          </section>
+
+          <section class="step" data-step="1" aria-labelledby="step2-title" hidden>
+            <div class="step-heading"><h2 id="step2-title" tabindex="-1">What should the website do?</h2><p>Choose the features and pages that matter to your salon.</p></div>
+            <div class="grid">
+              <fieldset class="field full choice-group">
+                <legend>Main goals <span class="optional">Choose all that apply</span></legend>
+                <div class="options">
+                  <label class="option"><input type="checkbox" name="Website goals" value="Show salon services and prices">Show services and prices</label>
+                  <label class="option"><input type="checkbox" name="Website goals" value="Get more appointments">Get more appointments</label>
+                  <label class="option"><input type="checkbox" name="Website goals" value="Get WhatsApp enquiries">Get WhatsApp enquiries</label>
+                  <label class="option"><input type="checkbox" name="Website goals" value="Promote products or gift cards">Promote products or gift cards</label>
+                  <label class="option"><input type="checkbox" name="Website goals" value="Show salon photos and reviews">Show photos and reviews</label>
+                  <label class="option"><input type="checkbox" name="Website goals" value="Other goal">Something else</label>
+                </div>
+              </fieldset>
+              <fieldset class="field full choice-group">
+                <legend>Pages you might need <span class="optional">Choose all that apply</span></legend>
+                <div class="options">
+                  <label class="option"><input type="checkbox" name="Website pages" value="Home">Home</label>
+                  <label class="option"><input type="checkbox" name="Website pages" value="About the salon">About the salon</label>
+                  <label class="option"><input type="checkbox" name="Website pages" value="Services and prices">Services and prices</label>
+                  <label class="option"><input type="checkbox" name="Website pages" value="Gallery">Gallery</label>
+                  <label class="option"><input type="checkbox" name="Website pages" value="Bookings">Bookings</label>
+                  <label class="option"><input type="checkbox" name="Website pages" value="Contact and location">Contact and location</label>
+                </div>
+              </fieldset>
+              <div class="field"><label for="booking">Do you use a booking system? <span class="optional">Optional</span></label><select id="booking" name="Booking system"><option value="">Choose one</option><option>I already use one</option><option>I would like a recommendation</option><option>Not needed</option><option>Not sure yet</option></select></div>
+              <div class="field"><label for="languages">Website language <span class="optional">Optional</span></label><input id="languages" name="Website language" type="text" maxlength="150" placeholder="English, Hindi, both…"></div>
+            </div>
+          </section>
+
+          <section class="step" data-step="2" aria-labelledby="step3-title" hidden>
+            <div class="step-heading"><h2 id="step3-title" tabindex="-1">Your style and content</h2><p>Tell us what feels right for your salon brand.</p></div>
+            <div class="grid">
+              <fieldset class="field full choice-group">
+                <legend>Which look do you like? <span class="optional">Choose all that apply</span></legend>
+                <div class="options">
+                  <label class="option"><input type="checkbox" name="Preferred style" value="Clean and modern">Clean and modern</label>
+                  <label class="option"><input type="checkbox" name="Preferred style" value="Luxury and elegant">Luxury and elegant</label>
+                  <label class="option"><input type="checkbox" name="Preferred style" value="Warm and natural">Warm and natural</label>
+                  <label class="option"><input type="checkbox" name="Preferred style" value="Bold and colourful">Bold and colourful</label>
+                </div>
+              </fieldset>
+              <div class="field"><label for="brand">Brand colours or logo <span class="optional">Optional</span></label><input id="brand" name="Brand colours or logo" type="text" maxlength="300" placeholder="Describe them or share a link"></div>
+              <div class="field"><label for="photos">Salon photos <span class="optional">Optional</span></label><select id="photos" name="Salon photos available"><option value="">Choose one</option><option>Yes, I have photos</option><option>Not yet</option><option>I would like help with photos</option></select></div>
+              <div class="field full"><label for="social">Instagram, Facebook, or other social links <span class="optional">Optional</span></label><textarea id="social" name="Social media links" maxlength="1500" placeholder="Paste any links here"></textarea></div>
+              <div class="field full"><label for="reference">Websites you like <span class="optional">Optional</span></label><textarea id="reference" name="Website references" maxlength="1500" placeholder="Share links or describe what you like about them"></textarea></div>
+            </div>
+          </section>
+
+          <section class="step" data-step="3" aria-labelledby="step4-title" hidden>
+            <div class="step-heading"><h2 id="step4-title" tabindex="-1">Timing and final details</h2><p>Nearly done. Share your preferred timing and anything else we should know.</p></div>
+            <div class="grid">
+              <div class="field"><label for="deadline">When would you like the website ready? <span class="optional">Optional</span></label><input id="deadline" name="Preferred launch date" type="date"></div>
+              <div class="field"><label for="content">Website wording and photos <span class="optional">Optional</span></label><select id="content" name="Content support"><option value="">Choose one</option><option>I can provide them</option><option>I would like help preparing them</option><option>Let's decide together</option></select></div>
+              <fieldset class="field full choice-group">
+                <legend>Useful extras <span class="optional">Choose all that apply</span></legend>
+                <div class="options">
+                  <label class="option"><input type="checkbox" name="Extra features" value="Google Maps">Google Maps</label>
+                  <label class="option"><input type="checkbox" name="Extra features" value="WhatsApp button">WhatsApp button</label>
+                  <label class="option"><input type="checkbox" name="Extra features" value="Customer reviews">Customer reviews</label>
+                  <label class="option"><input type="checkbox" name="Extra features" value="Offers and promotions">Offers and promotions</label>
+                </div>
+              </fieldset>
+              <div class="field full"><label for="notes">Anything else we should know? <span class="optional">Optional</span></label><textarea id="notes" name="Additional notes" maxlength="3000" placeholder="Special requests, important details, or questions"></textarea></div>
+            </div>
+            <label class="privacy"><input type="checkbox" name="Contact permission" value="Agreed" required><span>I agree that you may use these details to contact me about this salon website enquiry.</span></label>
+          </section>
+
+          <div class="form-footer">
+            <p class="form-footer-note"><span aria-hidden="true">*</span> Required fields</p>
+            <div class="actions">
+              <button class="button secondary" id="backButton" type="button" hidden>Back</button>
+              <button class="button primary" id="nextButton" type="button">Continue <span aria-hidden="true">→</span></button>
+              <button class="button primary" id="submitButton" type="submit" hidden>Send enquiry</button>
+            </div>
+          </div>
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+      <p class="footer-note">Your information will only be used to discuss your salon website enquiry.</p>
+    </main>
+
+    <script>
+      (() => {
+        const form = document.getElementById("salonForm");
+        const steps = [...document.querySelectorAll(".step")];
+        const dots = [...document.querySelectorAll(".step-dot")];
+        const progressText = document.getElementById("progressText");
+        const progressBar = document.getElementById("progressBar");
+        const backButton = document.getElementById("backButton");
+        const nextButton = document.getElementById("nextButton");
+        const submitButton = document.getElementById("submitButton");
+        const status = document.getElementById("status");
+        let currentStep = 0;
+
+        function showStep(index, moveFocus = true) {
+          currentStep = index;
+          steps.forEach((step, i) => { step.hidden = i !== index; });
+          dots.forEach((dot, i) => {
+            dot.classList.toggle("current", i === index);
+            dot.classList.toggle("done", i < index);
+          });
+          progressText.textContent = `Step ${index + 1} of ${steps.length}`;
+          progressBar.style.width = `${((index + 1) / steps.length) * 100}%`;
+          backButton.hidden = index === 0;
+          nextButton.hidden = index === steps.length - 1;
+          submitButton.hidden = index !== steps.length - 1;
+          status.textContent = "";
+          status.className = "status";
+          if (moveFocus) {
+            steps[index].querySelector("h2").focus({ preventScroll: true });
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        }
+
+        function validateCurrentStep() {
+          const controls = [...steps[currentStep].querySelectorAll("input, select, textarea")];
+          const invalid = controls.find(control => !control.checkValidity());
+          if (invalid) {
+            invalid.reportValidity();
+            invalid.focus();
+            return false;
+          }
+          return true;
+        }
+
+        function collectFormData() {
+          const payload = {};
+          for (const [key, value] of new FormData(form).entries()) {
+            if (Object.prototype.hasOwnProperty.call(payload, key)) {
+              if (!Array.isArray(payload[key])) payload[key] = [payload[key]];
+              payload[key].push(value);
+            } else {
+              payload[key] = value;
+            }
+          }
+          return payload;
+        }
+
+        nextButton.addEventListener("click", () => {
+          if (validateCurrentStep()) showStep(Math.min(currentStep + 1, steps.length - 1));
+        });
+        backButton.addEventListener("click", () => showStep(Math.max(currentStep - 1, 0)));
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          if (!validateCurrentStep()) return;
+
+          const buttonLabel = submitButton.textContent;
+          submitButton.disabled = true;
+          submitButton.textContent = "Sending…";
+          status.textContent = "";
+          status.className = "status";
+
+          try {
+            const response = await fetch("/api/submit", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(collectFormData())
+            });
+            const raw = await response.text();
+            let result;
+            try {
+              result = JSON.parse(raw);
+            } catch {
+              throw new Error("The form service did not return a valid reply. Please try again later.");
+            }
+            if (!response.ok || !result.ok) {
+              throw new Error(result.message || "We could not send your enquiry. Please try again.");
+            }
+
+            form.reset();
+            showStep(0, false);
+            status.textContent = "Thank you! Your enquiry has been sent successfully.";
+            status.className = "status success";
+            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+          } catch (error) {
+            status.textContent = error instanceof TypeError
+              ? "Could not reach the form service. Please check your connection and try again."
+              : error.message;
+            status.className = "status error";
+          } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = buttonLabel;
+          }
+        });
+
+        showStep(0, false);
+      })();
+    </script>
+  </body>
+</html>

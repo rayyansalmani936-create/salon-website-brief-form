@@ -1,0 +1,10 @@
+{
+  "name": "salon-client-intake-form",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "Mobile-friendly salon website enquiry form with a Vercel email endpoint.",
+  "dependencies": {
+    "nodemailer": "^10.1.7"
+  }
+}
